@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Studio Verde（スタジオ ヴェルデ）｜グループフィットネススタジオ ― デモサイト</title>
+<meta name="description" content="グループフィットネススタジオのランディングページ デモ。掲載しているスタジオ名・写真・文章・価格はすべて架空のサンプルです。">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Zen+Old+Mincho:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ===========================================================
+   Studio Verde — デモ用ランディングページ
+   1ファイル完結（HTML + CSS + JavaScript）。画像ファイルは0枚。
+   ------------------------------------------------------------
+   色・余白・角丸を変えたいときは、下の :root だけ書き換えれば
+   ページ全体に反映されます。
+   =========================================================== */
+
+:root{
+  /* --- 配色（緑系・彩度を抑えたトーン） --------------------- */
+  --cream:      #FAF8F4;   /* 一番明るい背景 */
+  --mist:       #EFF2EC;   /* 薄い緑がかった背景 */
+  --sage:       #B9C9B8;   /* 中間の緑（飾り線・図版） */
+  --green:      #6F8B73;   /* 標準の緑（ボタン・アイコン） */
+  --green-deep: #3E5347;   /* 濃い緑（背景の反転帯） */
+  --ink:        #2A332D;   /* 本文の文字色 */
+  --ink-soft:   #55605A;   /* 補助テキスト */
+  --muted:      #8A938C;   /* さらに薄い補助テキスト */
+  --line:       #DDE3DA;   /* 罫線 */
+  --gold:       #C4AE8E;   /* 差し色（少しだけ使う） */
+
+  /* --- レイアウト ------------------------------------------ */
+  --maxw: 1120px;          /* コンテンツの最大幅 */
+  --pad: 24px;             /* 左右の余白（スマホ） */
+  --r: 4px;                /* 角丸 */
+  --header-h: 76px;        /* ヘッダーの高さ（PC） */
+  --notice-h: 34px;        /* 上部「デモ表示」帯の高さ */
+
+  /* --- 書体 ------------------------------------------------ */
+  --ff-body: "Zen Kaku Gothic New", -apple-system, "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
+  --ff-disp: "Zen Old Mincho", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  --ff-lat:  "Cormorant Garamond", var(--ff-disp);
+  --num: lining-nums;    /* 数字を高さの揃った形にする */
+
+  --ease: cubic-bezier(.22,.61,.36,1);
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+html{ scroll-behavior:smooth; scroll-padding-top: calc(var(--header-h) + var(--notice-h)); }
+body{
+  font-family: var(--ff-body);
+  color: var(--ink);
+  background: var(--cream);
+  line-height: 1.9;
+  font-size: 15px;
+  letter-spacing: .04em;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+img{ max-width:100%; display:block; }
+a{ color:inherit; text-decoration:none; }
+ul, ol{ list-style:none; }
+
+/* ===== 共通パーツ ========================================== */
+.wrap{ width:100%; max-width:var(--maxw); margin-inline:auto; padding-inline:var(--pad); }
+
+.section{ padding: 88px 0; position:relative; }
+.section--tint{ background: var(--mist); }
+.section--deep{ background: var(--green-deep); color: #F2F5F0; }
+
+/* 見出し（英字ラベル + 日本語見出し） */
+.head{ text-align:center; margin-bottom: 48px; }
+.head__en{
+  font-family: var(--ff-lat);
+  font-size: 13px; letter-spacing:.32em; text-transform:uppercase;
+  color: var(--green); display:block; margin-bottom:10px;
+}
+.section--deep .head__en{ color: var(--sage); }
+.head__jp{
+  font-family: var(--ff-disp); font-weight:500;
+  font-size: clamp(21px, 4.4vw, 28px); letter-spacing:.1em; line-height:1.6;
+}
+.head__lead{ margin-top:16px; color:var(--ink-soft); font-size:14px; }
+.section--deep .head__lead{ color:#CEDACE; }
+
+/* ボタン */
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:.6em;
+  min-height:54px; padding: 0 30px;
+  font-size:14px; letter-spacing:.12em; font-weight:500;
+  border:1px solid var(--green); border-radius:var(--r);
+  background: var(--green); color:#fff;
+  transition: background .35s var(--ease), color .35s var(--ease), transform .35s var(--ease);
+}
+.btn:hover{ background: var(--green-deep); border-color: var(--green-deep); transform: translateY(-2px); }
+.btn--ghost{ background:transparent; color:var(--green-deep); border-color: var(--sage); }
+.btn--ghost:hover{ background: var(--green-deep); color:#fff; border-color:var(--green-deep); }
+.btn--light{ background:transparent; color:#fff; border-color: rgba(255,255,255,.55); }
+.btn--light:hover{ background:#fff; color:var(--green-deep); border-color:#fff; }
+.btn--wide{ width:100%; max-width:340px; }
+
+/* 写真が入る場所（今は図版で代用） */
+.ph{
+  position:relative; overflow:hidden; border-radius:var(--r);
+  background: linear-gradient(150deg, var(--mist) 0%, var(--sage) 100%);
+}
+.ph svg{ width:100%; height:100%; display:block; }
+.ph__note{
+  position:absolute; left:50%; bottom:14px; transform:translateX(-50%);
+  font-size:11px; letter-spacing:.18em; color: rgba(42,51,45,.55);
+  background: rgba(250,248,244,.82); padding:5px 14px; border-radius:999px;
+  white-space:nowrap;
+}
+
+/* スクロールで浮かび上がる演出 */
+.reveal{ opacity:0; transform: translateY(24px); transition: opacity .9s var(--ease), transform .9s var(--ease); }
+.reveal.is-in{ opacity:1; transform:none; }
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior:auto; }
+  .reveal{ opacity:1; transform:none; transition:none; }
+}
+
+/* ===== デモ表示の帯 ======================================== */
+.notice{
+  position:fixed; inset:0 0 auto 0; z-index:60;
+  height:var(--notice-h); display:flex; align-items:center; justify-content:center;
+  background: var(--green-deep); color:#E6EDE5;
+  font-size:11px; letter-spacing:.08em; text-align:center; padding-inline:12px;
+}
+
+/* ===== ヘッダー ============================================ */
+.header{
+  position:fixed; inset: var(--notice-h) 0 auto 0; z-index:50;
+  height: var(--header-h);
+  display:flex; align-items:center;
+  background: rgba(250,248,244,0);
+  transition: background .4s var(--ease), box-shadow .4s var(--ease), height .4s var(--ease);
+}
+.header.is-solid{
+  background: rgba(250,248,244,.94);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 1px 0 var(--line);
+}
+.header__inner{ display:flex; align-items:center; justify-content:space-between; width:100%; }
+.logo{ display:flex; flex-direction:column; line-height:1.25; }
+.logo__en{ font-family:var(--ff-lat); font-size:22px; letter-spacing:.18em; color:var(--green-deep); }
+.logo__jp{ font-size:10px; letter-spacing:.26em; color:var(--muted); }
+.header:not(.is-solid) .logo__en{ color:#fff; }
+.header:not(.is-solid) .logo__jp{ color:rgba(255,255,255,.75); }
+
+.nav__list{ display:flex; align-items:center; gap:30px; }
+.nav__link{
+  position:relative; font-size:12px; letter-spacing:.16em; padding:6px 0;
+  color: var(--ink); transition: color .3s var(--ease);
+}
+.header:not(.is-solid) .nav__link{ color:#fff; text-shadow:0 1px 8px rgba(0,0,0,.3); }
+.nav__link::after{
+  content:""; position:absolute; left:0; bottom:0; width:100%; height:1px;
+  background: currentColor; transform: scaleX(0); transform-origin:right;
+  transition: transform .4s var(--ease);
+}
+.nav__link:hover::after, .nav__link.is-active::after{ transform: scaleX(1); transform-origin:left; }
+.nav__link small{ display:block; font-size:9px; letter-spacing:.1em; opacity:.6; margin-top:1px; }
+
+/* ハンバーガー（スマホ・タブレット） */
+.burger{
+  display:none; width:44px; height:44px; border:0; background:transparent;
+  position:relative; cursor:pointer; z-index:2;
+}
+.burger span{
+  position:absolute; left:11px; width:22px; height:1px; background: var(--ink);
+  transition: transform .4s var(--ease), opacity .3s var(--ease), background .3s var(--ease);
+}
+.burger span:nth-child(1){ top:16px; }
+.burger span:nth-child(2){ top:22px; }
+.burger span:nth-child(3){ top:28px; }
+.header:not(.is-solid) .burger span{ background:#fff; }
+.burger.is-open span{ background: var(--ink); }
+.burger.is-open span:nth-child(1){ transform: translateY(6px) rotate(45deg); }
+.burger.is-open span:nth-child(2){ opacity:0; }
+.burger.is-open span:nth-child(3){ transform: translateY(-6px) rotate(-45deg); }
+
+/* ===== ファーストビュー ==================================== */
+.hero{
+  position:relative; min-height: 100svh; display:flex; align-items:center;
+  padding-top: calc(var(--header-h) + var(--notice-h));
+  background: linear-gradient(165deg, #47604F 0%, #6F8B73 48%, #A8BFAE 100%);
+  overflow:hidden;
+}
+.hero__art{ position:absolute; inset:0; opacity:.5; }
+.hero__art svg{ width:100%; height:100%; }
+.hero__veil{ position:absolute; inset:0; background: linear-gradient(100deg, rgba(30,45,36,.42) 0%, rgba(30,45,36,.05) 65%); }
+.hero__inner{ position:relative; z-index:2; color:#fff; padding-block: 60px; }
+.hero__label{
+  font-family:var(--ff-lat); font-size:13px; letter-spacing:.34em; text-transform:uppercase;
+  color: rgba(255,255,255,.85); margin-bottom:22px;
+}
+.hero__title{
+  font-family: var(--ff-disp); font-weight:500;
+  font-size: clamp(28px, 6.4vw, 52px); line-height:1.55; letter-spacing:.09em;
+  text-shadow: 0 2px 24px rgba(20,34,24,.28);
+}
+.hero__title em{ font-style:normal; display:block; }
+.hero__text{
+  margin-top: 26px; max-width: 30em; font-size:14px; line-height:2.1;
+  color: rgba(255,255,255,.92); text-shadow:0 1px 12px rgba(20,34,24,.3);
+}
+.hero__cta{ display:flex; flex-wrap:wrap; gap:14px; margin-top:38px; }
+.hero__scroll{
+  position:absolute; left:50%; bottom:26px; transform:translateX(-50%);
+  z-index:2; color:#fff; font-family:var(--ff-lat); font-size:11px; letter-spacing:.28em;
+  display:flex; flex-direction:column; align-items:center; gap:10px;
+}
+.hero__scroll::after{
+  content:""; width:1px; height:52px; background: rgba(255,255,255,.7);
+  animation: scrollLine 2.4s var(--ease) infinite;
+}
+@keyframes scrollLine{
+  0%{ transform: scaleY(0); transform-origin: top; }
+  45%{ transform: scaleY(1); transform-origin: top; }
+  55%{ transform: scaleY(1); transform-origin: bottom; }
+  100%{ transform: scaleY(0); transform-origin: bottom; }
+}
+
+/* ===== お知らせ ============================================ */
+.news__list{ max-width: 780px; margin-inline:auto; border-top:1px solid var(--line); }
+.news__item{
+  display:grid; grid-template-columns: 106px 92px 1fr; align-items:center; gap:18px;
+  padding: 22px 6px; border-bottom:1px solid var(--line);
+  transition: background .35s var(--ease);
+}
+.news__item:hover{ background: rgba(185,201,184,.14); }
+.news__date{ font-variant-numeric: var(--num); font-family:var(--ff-lat); font-size:15px; letter-spacing:.1em; color:var(--muted); }
+.news__tag{
+  font-size:11px; letter-spacing:.12em; text-align:center;
+  border:1px solid var(--sage); color:var(--green); border-radius:999px; padding:3px 0;
+}
+.news__title{ font-size:14px; }
+.news__more{ text-align:center; margin-top:38px; }
+
+/* ===== Instagram ========================================== */
+.ig__grid{
+  display:grid; grid-template-columns: repeat(6, 1fr); gap:10px;
+}
+.ig__cell{ aspect-ratio:1/1; }
+.ig__foot{ text-align:center; margin-top:34px; }
+.ig__id{ font-family:var(--ff-lat); font-size:15px; letter-spacing:.16em; color:var(--ink-soft); margin-bottom:18px; }
+
+/* ===== スタジオ紹介 ======================================== */
+.about__top{ display:grid; grid-template-columns: 1.05fr .95fr; gap: 56px; align-items:center; }
+.about__ph{ aspect-ratio: 4/5; }
+.about__title{
+  font-family:var(--ff-disp); font-weight:500; font-size: clamp(20px,3.6vw,26px);
+  line-height:1.85; letter-spacing:.08em; margin-bottom:24px;
+}
+.about__text p + p{ margin-top:1.4em; }
+.about__text{ color:var(--ink-soft); font-size:14px; }
+.about__sign{ margin-top:28px; font-family:var(--ff-disp); font-size:14px; letter-spacing:.14em; color:var(--green); }
+
+.feature{ display:grid; grid-template-columns: repeat(3,1fr); gap:28px; margin-top:72px; }
+.feature__item{ background:var(--cream); border:1px solid var(--line); border-radius:var(--r); padding: 34px 26px; text-align:center; }
+.feature__no{ display:block; font-family:var(--ff-lat); font-size:13px; letter-spacing:.3em; color:var(--gold); }
+.feature__icon{ display:block; width:46px; height:46px; margin: 16px auto 18px; color: var(--green); }
+.feature__name{ font-family:var(--ff-disp); font-size:17px; letter-spacing:.08em; margin-bottom:12px; }
+.feature__desc{ font-size:13px; color:var(--ink-soft); line-height:2; text-align:left; }
+
+/* ===== 料金・はじめての方へ ================================ */
+.plan{ display:grid; grid-template-columns: repeat(3,1fr); gap:24px; }
+.plan__card{
+  background:#fff; border:1px solid var(--line); border-radius:var(--r);
+  padding: 38px 28px 34px; text-align:center; position:relative;
+  transition: transform .4s var(--ease), box-shadow .4s var(--ease);
+}
+.plan__card:hover{ transform: translateY(-4px); box-shadow: 0 22px 50px -30px rgba(42,51,45,.4); }
+.plan__card--pick{ border-color: var(--green); }
+.plan__badge{ font-variant-numeric: var(--num);
+  position:absolute; top:-13px; left:50%; transform:translateX(-50%);
+  background: var(--green); color:#fff; font-size:11px; letter-spacing:.14em;
+  padding: 5px 18px; border-radius:999px; white-space:nowrap;
+}
+.plan__name{ font-family:var(--ff-disp); font-size:19px; letter-spacing:.1em; }
+.plan__note{ font-size:12px; color:var(--muted); margin-top:8px; }
+.plan__price{ font-variant-numeric: var(--num); font-family:var(--ff-lat); font-size:40px; letter-spacing:.02em; color:var(--green-deep); margin:18px 0 4px; }
+.plan__price span{ font-family:var(--ff-body); font-size:13px; letter-spacing:.1em; margin-left:4px; }
+.plan__list{ margin-top:22px; padding-top:20px; border-top:1px solid var(--line); text-align:left; }
+.plan__list li{ font-size:13px; color:var(--ink-soft); padding-left:20px; position:relative; margin-bottom:10px; }
+.plan__list li::before{
+  content:""; position:absolute; left:2px; top:.6em; width:9px; height:5px;
+  border-left:1.2px solid var(--green); border-bottom:1.2px solid var(--green);
+  transform: rotate(-45deg);
+}
+
+.flow{ margin-top:78px; }
+.flow__title{ text-align:center; font-family:var(--ff-disp); font-size:19px; letter-spacing:.12em; margin-bottom:38px; }
+.flow__list{ display:grid; grid-template-columns: repeat(4,1fr); gap:20px; }
+.flow__item{ text-align:center; position:relative; padding: 0 6px; }
+.flow__item:not(:last-child)::after{
+  content:""; position:absolute; right:-12px; top:26px; width:8px; height:8px;
+  border-top:1px solid var(--sage); border-right:1px solid var(--sage); transform: rotate(45deg);
+}
+.flow__no{ font-variant-numeric: var(--num);
+  width:54px; height:54px; margin:0 auto 16px; border-radius:50%;
+  border:1px solid var(--sage); display:flex; align-items:center; justify-content:center;
+  font-family:var(--ff-lat); font-size:18px; color:var(--green); background:#fff;
+}
+.flow__name{ font-size:14px; font-weight:500; margin-bottom:8px; }
+.flow__desc{ font-size:12px; color:var(--ink-soft); line-height:1.95; }
+
+.faq{ max-width:800px; margin: 74px auto 0; }
+.faq__item{ border-bottom:1px solid var(--line); }
+.faq__q{
+  width:100%; background:none; border:0; cursor:pointer; font: inherit; color:inherit;
+  text-align:left; padding: 22px 42px 22px 30px; position:relative; letter-spacing:.05em;
+}
+.faq__q::before{ content:"Q"; position:absolute; left:0; top:22px; font-family:var(--ff-lat); color:var(--green); }
+.faq__q::after{
+  content:""; position:absolute; right:8px; top:29px; width:9px; height:9px;
+  border-right:1px solid var(--green); border-bottom:1px solid var(--green);
+  transform: rotate(45deg); transition: transform .35s var(--ease);
+}
+.faq__item.is-open .faq__q::after{ transform: rotate(-135deg); }
+.faq__a{ display:none; padding: 0 30px 24px; font-size:13px; color:var(--ink-soft); }
+.faq__item.is-open .faq__a{ display:block; }
+
+/* ===== アクセス ============================================ */
+.access__grid{ display:grid; grid-template-columns: 1fr 1fr; gap:48px; align-items:start; }
+.access__map{ aspect-ratio: 4/3; }
+.info{ border-top:1px solid var(--line); }
+.info__row{ display:grid; grid-template-columns: 110px 1fr; gap:16px; padding:16px 4px; border-bottom:1px solid var(--line); font-size:13px; }
+.info__key{ color:var(--muted); letter-spacing:.1em; }
+.hours{ width:100%; border-collapse:collapse; margin-top:26px; font-size:13px; }
+.hours th, .hours td{ border:1px solid var(--line); padding:11px 8px; text-align:center; }
+.hours th{ background: var(--mist); font-weight:500; letter-spacing:.08em; }
+
+/* ===== お問い合わせ ======================================== */
+.contact__box{ max-width:720px; margin-inline:auto; text-align:center; }
+.contact__tel{ font-variant-numeric: var(--num); font-family:var(--ff-lat); font-size: clamp(30px,6vw,44px); letter-spacing:.06em; display:inline-block; margin: 8px 0 4px; }
+.contact__sub{ font-size:12px; color:#CEDACE; margin-bottom:34px; }
+.contact__btns{ display:flex; flex-wrap:wrap; gap:14px; justify-content:center; }
+
+/* ===== フッター ============================================ */
+.footer{ background: var(--cream); padding: 56px 0 34px; border-top:1px solid var(--line); }
+.footer__inner{ display:flex; flex-wrap:wrap; gap:26px; justify-content:space-between; align-items:flex-start; }
+.footer__nav{ display:flex; flex-wrap:wrap; gap:18px 26px; }
+.footer__nav a{ font-size:12px; letter-spacing:.12em; color:var(--ink-soft); }
+.footer__nav a:hover{ color:var(--green); }
+.footer__note{ margin-top:40px; padding-top:22px; border-top:1px solid var(--line); font-size:11px; color:var(--muted); line-height:2; }
+.footer__copy{ font-family:var(--ff-lat); font-size:11px; letter-spacing:.16em; color:var(--muted); margin-top:10px; }
+
+/* ===== タブレット（〜1024px） ============================== */
+@media (max-width: 1024px){
+  .section{ padding: 72px 0; }
+  .about__top{ grid-template-columns: 1fr; gap:36px; }
+  .about__ph{ aspect-ratio: 16/10; }
+  .feature{ grid-template-columns: 1fr; gap:18px; margin-top:52px; }
+  .feature__desc{ text-align:center; }
+  .plan{ grid-template-columns: 1fr; max-width:460px; margin-inline:auto; gap:30px; }
+  .access__grid{ grid-template-columns: 1fr; gap:34px; }
+  .ig__grid{ grid-template-columns: repeat(3,1fr); }
+
+  /* ナビをスライドインのメニューへ */
+  .burger{ display:block; }
+  /* backdrop-filter を付けたままだと、ヘッダーが position:fixed の基準に
+     なってしまい、メニューが画面全体に広がらない。タブレット以下では外す */
+  .header.is-solid{ backdrop-filter:none; background: var(--cream); }
+  .nav{
+    position:fixed; inset: calc(var(--notice-h) + var(--header-h)) 0 0 0;
+    background: var(--cream);
+    transform: translateX(100%); transition: transform .5s var(--ease);
+    overflow-y:auto; padding: 26px var(--pad) 60px;
+  }
+  .nav.is-open{ transform:none; }
+  .nav__list{ flex-direction:column; align-items:stretch; gap:0; }
+  .nav__link{
+    display:block; padding: 20px 4px; border-bottom:1px solid var(--line);
+    font-size:15px; letter-spacing:.14em;
+  }
+  .header:not(.is-solid) .nav__link{ color:var(--ink); text-shadow:none; }
+  .nav__link::after{ display:none; }
+  .nav__link small{ font-size:10px; margin-top:3px; }
+}
+
+/* ===== スマートフォン（〜640px） =========================== */
+@media (max-width: 640px){
+  :root{ --pad:20px; --header-h:64px; }
+  .notice{ font-size:10px; letter-spacing:.02em; }
+  body{ font-size:14px; line-height:1.95; }
+  .section{ padding: 60px 0; }
+  .head{ margin-bottom:34px; }
+  .hero__cta{ flex-direction:column; align-items:stretch; }
+  .hero__cta .btn{ width:100%; }
+  .hero__text{ font-size:13.5px; }
+  .news__item{ grid-template-columns: 84px 78px; row-gap:6px; padding:18px 2px; }
+  .news__title{ grid-column: 1 / -1; }
+  .flow__list{ grid-template-columns: 1fr 1fr; gap:26px 14px; }
+  .flow__item:not(:last-child)::after{ display:none; }
+  .ig__grid{ gap:6px; }
+  .hours th, .hours td{ padding:9px 2px; font-size:12px; }
+  .info__row{ grid-template-columns: 86px 1fr; gap:10px; }
+  .footer__inner{ flex-direction:column; }
+}
+</style>
+</head>
+<body id="top">
+
+<!-- ===== デモである旨の表示（納品時は削除する行） ===== -->
+<div class="notice">デモサイトです。掲載内容はすべて架空のサンプルです。</div>
+
+<!-- ===== ヘッダー（メニュー6つ・すべてページ内リンク） ===== -->
+<header class="header" id="header">
+  <div class="wrap header__inner">
+    <a class="logo" href="#top" aria-label="トップへ戻る">
+      <span class="logo__en">Studio Verde</span>
+      <span class="logo__jp">スタジオ ヴェルデ</span>
+    </a>
+
+    <button class="burger" id="burger" aria-label="メニューを開く" aria-expanded="false" aria-controls="nav">
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav class="nav" id="nav">
+      <ul class="nav__list">
+        <li><a class="nav__link" href="#news">NEWS<small>お知らせ</small></a></li>
+        <li><a class="nav__link" href="#instagram">INSTAGRAM<small>スタジオの様子</small></a></li>
+        <li><a class="nav__link" href="#about">ABOUT<small>スタジオ紹介</small></a></li>
+        <li><a class="nav__link" href="#price">PRICE<small>料金・はじめての方へ</small></a></li>
+        <li><a class="nav__link" href="#access">ACCESS<small>アクセス</small></a></li>
+        <li><a class="nav__link" href="#contact">CONTACT<small>お問い合わせ</small></a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<!-- ===== 1. ファーストビュー ===== -->
+<section class="hero">
+  <div class="hero__art" aria-hidden="true">
+    <svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="hg1" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity=".30"/>
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      <circle cx="1180" cy="250" r="330" fill="url(#hg1)"/>
+      <circle cx="230" cy="760" r="260" fill="url(#hg1)"/>
+      <g stroke="#ffffff" stroke-opacity=".22" fill="none" stroke-width="1">
+        <path d="M-40 660 C 300 540, 620 760, 1480 560"/>
+        <path d="M-40 720 C 320 600, 660 820, 1480 620"/>
+        <path d="M-40 780 C 340 660, 700 880, 1480 680"/>
+      </g>
+    </svg>
+  </div>
+  <div class="hero__veil" aria-hidden="true"></div>
+
+  <div class="wrap hero__inner">
+    <p class="hero__label">Group Fitness Studio</p>
+    <h1 class="hero__title">
+      <em>呼吸をととのえる、</em>
+      <em>わたしのための30分。</em>
+    </h1>
+    <p class="hero__text">
+      少人数のグループレッスンだから、はじめての方も置いていかれません。
+      運動が久しぶりの方から、体力づくりを続けたい方まで。
+      緑に囲まれたスタジオで、自分のペースで通えます。
+    </p>
+    <div class="hero__cta">
+      <a class="btn btn--light" href="#contact">体験レッスンを予約する</a>
+      <a class="btn btn--light" href="#price">料金を見る</a>
+    </div>
+  </div>
+
+  <a class="hero__scroll" href="#news" aria-label="下へスクロール">SCROLL</a>
+</section>
+
+<!-- ===== 2. お知らせ ===== -->
+<section class="section" id="news">
+  <div class="wrap">
+    <div class="head reveal">
+      <span class="head__en">News</span>
+      <h2 class="head__jp">お知らせ</h2>
+    </div>
+
+    <ul class="news__list reveal">
+      <li class="news__item">
+        <time class="news__date" datetime="2026-10-01">2026.10.01</time>
+        <span class="news__tag">OPEN</span>
+        <p class="news__title">グランドオープンいたしました。オープン記念の体験レッスンを受付中です。</p>
+      </li>
+      <li class="news__item">
+        <time class="news__date" datetime="2026-09-24">2026.09.24</time>
+        <span class="news__tag">LESSON</span>
+        <p class="news__title">10月のレッスンスケジュールを公開しました。朝クラスを2枠増やしています。</p>
+      </li>
+      <li class="news__item">
+        <time class="news__date" datetime="2026-09-18">2026.09.18</time>
+        <span class="news__tag">INFO</span>
+        <p class="news__title">入会金無料キャンペーンのご案内（10月末までにご入会の方が対象です）。</p>
+      </li>
+      <li class="news__item">
+        <time class="news__date" datetime="2026-09-10">2026.09.10</time>
+        <span class="news__tag">INFO</span>
+        <p class="news__title">公式サイトを公開しました。見学・体験のご予約はお問い合わせよりお願いいたします。</p>
+      </li>
+    </ul>
+
+    <div class="news__more reveal">
+      <a class="btn btn--ghost" href="#contact">体験・見学のご予約はこちら</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 3. Instagram ===== -->
+<section class="section section--tint" id="instagram">
+  <div class="wrap">
+    <div class="head reveal">
+      <span class="head__en">Instagram</span>
+      <h2 class="head__jp">スタジオの様子</h2>
+      <p class="head__lead">レッスンの風景や日々のお知らせは、Instagram でも発信しています。</p>
+    </div>
+
+    <ul class="ig__grid reveal">
+      <li class="ig__cell ph"><svg viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#DCE5DA"/><circle cx="50" cy="38" r="16" fill="#B4C7B5"/><path d="M18 100 Q50 62 82 100Z" fill="#9FB7A2"/></svg></li>
+      <li class="ig__cell ph"><svg viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#E7EBE1"/><path d="M0 70 Q25 46 50 66 T100 58V100H0Z" fill="#B4C7B5"/><circle cx="74" cy="26" r="12" fill="#CBD8C6"/></svg></li>
+      <li class="ig__cell ph"><svg viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#D6E0D4"/><rect x="16" y="16" width="68" height="68" rx="34" fill="none" stroke="#9FB7A2" stroke-width="6"/></svg></li>
+      <li class="ig__cell ph"><svg viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#EDEFE7"/><path d="M50 14C64 34 64 62 50 88 36 62 36 34 50 14Z" fill="#AFC4B0"/><path d="M50 14v74" stroke="#8FA893" stroke-width="1.5"/></svg></li>
+      <li class="ig__cell ph"><svg viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#DDE6DB"/><g fill="none" stroke="#A5BBA7" stroke-width="4"><path d="M10 74 Q34 40 58 66"/><path d="M42 88 Q66 50 94 74"/></g></svg></li>
+      <li class="ig__cell ph"><svg viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#E9EDE4"/><rect x="24" y="24" width="52" height="52" fill="#B9C9B8"/><rect x="38" y="38" width="24" height="24" fill="#EDEFE7"/></svg></li>
+    </ul>
+
+    <div class="ig__foot reveal">
+      <p class="ig__id">@studio_verde_demo</p>
+      <a class="btn btn--ghost" href="#instagram">Instagram を見る</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 4. スタジオ紹介 ===== -->
+<section class="section" id="about">
+  <div class="wrap">
+    <div class="head reveal">
+      <span class="head__en">About</span>
+      <h2 class="head__jp">スタジオ紹介</h2>
+    </div>
+
+    <div class="about__top">
+      <div class="ph about__ph reveal">
+        <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <rect width="400" height="500" fill="#DCE5DA"/>
+          <path d="M0 330 Q100 258 200 320 T400 292V500H0Z" fill="#B4C7B5"/>
+          <path d="M0 402 Q120 344 240 396 T400 372V500H0Z" fill="#9FB7A2"/>
+          <circle cx="300" cy="120" r="58" fill="#EAF0E7" opacity=".75"/>
+        </svg>
+        <span class="ph__note">お写真が入ります</span>
+      </div>
+
+      <div class="reveal">
+        <h3 class="about__title">「ここなら続けられる」を、<br>いちばん大切にしています。</h3>
+        <div class="about__text">
+          <p>当スタジオは、1レッスン最大8名までの少人数制です。インストラクターが全員の動きを見られる人数にしているので、はじめての方でも、周りに合わせて無理をする必要がありません。</p>
+          <p>プログラムは、ストレッチ中心のやさしいクラスから、しっかり汗をかくクラスまで。その日の体調に合わせて選んでいただけます。60代の方も、運動から10年離れていた方も通われています。</p>
+          <p>着替えやタオルはスタジオでご用意しています。お仕事帰りに手ぶらで立ち寄っていただける場所を目指しました。</p>
+        </div>
+        <p class="about__sign">Studio Verde</p>
+      </div>
+    </div>
+
+    <ul class="feature">
+      <li class="feature__item reveal">
+        <span class="feature__no">01</span>
+        <svg class="feature__icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="17" cy="16" r="6"/><circle cx="32" cy="19" r="5"/>
+          <path d="M7 38c0-6 4.5-10 10-10s10 4 10 10"/><path d="M27 33c1-4 4-6.5 8-6.5 3.6 0 6 2 7 5.5"/>
+        </svg>
+        <h4 class="feature__name">少人数・最大8名</h4>
+        <p class="feature__desc">大人数のスタジオのように、後ろで一人だけ分からないまま終わる、ということがありません。フォームはその場で直します。</p>
+      </li>
+      <li class="feature__item reveal">
+        <span class="feature__no">02</span>
+        <svg class="feature__icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="24" cy="24" r="15"/><path d="M24 14v10l7 4"/>
+        </svg>
+        <h4 class="feature__name">1レッスン45分</h4>
+        <p class="feature__desc">朝7時台から夜21時台まで。お仕事や家事の合間に収まる長さなので、週2回のペースが続けやすい構成です。</p>
+      </li>
+      <li class="feature__item reveal">
+        <span class="feature__no">03</span>
+        <svg class="feature__icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2" xmlns="http://www.w3.org/2000/svg">
+          <path d="M24 41c9-6 14-13 14-20a7 7 0 0 0-14-3 7 7 0 0 0-14 3c0 7 5 14 14 20Z"/>
+        </svg>
+        <h4 class="feature__name">女性専用・手ぶらでOK</h4>
+        <p class="feature__desc">ウェア・タオル・シューズの無料レンタルつき。パウダールームも完備しているので、そのままお出かけいただけます。</p>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===== 5. 料金・はじめての方へ ===== -->
+<section class="section section--tint" id="price">
+  <div class="wrap">
+    <div class="head reveal">
+      <span class="head__en">Price</span>
+      <h2 class="head__jp">料金・はじめての方へ</h2>
+      <p class="head__lead">表示はすべて税込です。入会金 5,500円 は、キャンペーン期間中は無料です。</p>
+    </div>
+
+    <ul class="plan">
+      <li class="plan__card reveal">
+        <h3 class="plan__name">月4回プラン</h3>
+        <p class="plan__note">週に1回のペースで</p>
+        <p class="plan__price">6,600<span>円 / 月</span></p>
+        <ul class="plan__list">
+          <li>全クラスからお選びいただけます</li>
+          <li>繰り越し1回まで可能</li>
+          <li>レンタル一式つき</li>
+        </ul>
+      </li>
+      <li class="plan__card plan__card--pick reveal">
+        <span class="plan__badge">いちばん選ばれています</span>
+        <h3 class="plan__name">月8回プラン</h3>
+        <p class="plan__note">週に2回、しっかり続けたい方へ</p>
+        <p class="plan__price">9,900<span>円 / 月</span></p>
+        <ul class="plan__list">
+          <li>全クラスからお選びいただけます</li>
+          <li>繰り越し2回まで可能</li>
+          <li>レンタル一式つき</li>
+          <li>お体の状態チェック（隔月）</li>
+        </ul>
+      </li>
+      <li class="plan__card reveal">
+        <h3 class="plan__name">通い放題プラン</h3>
+        <p class="plan__note">毎日でも通いたい方へ</p>
+        <p class="plan__price">13,200<span>円 / 月</span></p>
+        <ul class="plan__list">
+          <li>1日1レッスンまで受け放題</li>
+          <li>レンタル一式つき</li>
+          <li>お体の状態チェック（毎月）</li>
+        </ul>
+      </li>
+    </ul>
+
+    <div class="flow">
+      <h3 class="flow__title reveal">はじめての方へ ― 体験レッスンの流れ</h3>
+      <ol class="flow__list">
+        <li class="flow__item reveal">
+          <span class="flow__no">01</span>
+          <h4 class="flow__name">ご予約</h4>
+          <p class="flow__desc">お電話またはフォームから。ご希望の日時をお知らせください。</p>
+        </li>
+        <li class="flow__item reveal">
+          <span class="flow__no">02</span>
+          <h4 class="flow__name">ご来店</h4>
+          <p class="flow__desc">開始15分前にお越しください。手ぶらで大丈夫です。</p>
+        </li>
+        <li class="flow__item reveal">
+          <span class="flow__no">03</span>
+          <h4 class="flow__name">レッスン</h4>
+          <p class="flow__desc">45分のクラスにご参加いただきます。見学のみも可能です。</p>
+        </li>
+        <li class="flow__item reveal">
+          <span class="flow__no">04</span>
+          <h4 class="flow__name">ご案内</h4>
+          <p class="flow__desc">プランのご説明をします。その場でのご入会は必須ではありません。</p>
+        </li>
+      </ol>
+    </div>
+
+    <div class="faq reveal">
+      <div class="faq__item">
+        <button class="faq__q" type="button">運動から10年以上離れています。ついていけますか？</button>
+        <div class="faq__a">はい。体験のお客さまの半数以上が「運動は久しぶり」の方です。ストレッチ中心のやさしいクラスからご案内しますので、ご自身のペースで大丈夫です。</div>
+      </div>
+      <div class="faq__item">
+        <button class="faq__q" type="button">持ち物は何が必要ですか？</button>
+        <div class="faq__a">お飲み物だけお持ちください。ウェア・タオル・シューズは無料でお貸ししています。シャワー・パウダールームもご利用いただけます。</div>
+      </div>
+      <div class="faq__item">
+        <button class="faq__q" type="button">予約はいつまでに必要ですか？</button>
+        <div class="faq__a">レッスン開始の2時間前まで承ります。キャンセルは前日までにご連絡いただければ、回数の消化はありません。</div>
+      </div>
+      <div class="faq__item">
+        <button class="faq__q" type="button">駐車場はありますか？</button>
+        <div class="faq__a">提携駐車場を3台分ご用意しています。満車の場合は近隣のコインパーキングをご案内いたします。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 6. アクセス ===== -->
+<section class="section" id="access">
+  <div class="wrap">
+    <div class="head reveal">
+      <span class="head__en">Access</span>
+      <h2 class="head__jp">アクセス</h2>
+    </div>
+
+    <div class="access__grid">
+      <div class="ph access__map reveal">
+        <svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <rect width="400" height="300" fill="#E7EBE1"/>
+          <g stroke="#CBD8C6" stroke-width="10" fill="none">
+            <path d="M-10 120H410"/><path d="M120 -10V310"/><path d="M-10 226H410"/><path d="M286 -10V310"/>
+          </g>
+          <rect x="132" y="132" width="80" height="80" fill="#B4C7B5"/>
+          <circle cx="172" cy="172" r="13" fill="#4F6B57"/>
+          <path d="M172 196c7-11 11-17 11-22a11 11 0 0 0-22 0c0 5 4 11 11 22Z" fill="#4F6B57"/>
+        </svg>
+        <span class="ph__note">地図が入ります（Googleマップ埋め込み）</span>
+      </div>
+
+      <div class="reveal">
+        <dl class="info">
+          <div class="info__row"><dt class="info__key">店名</dt><dd>Studio Verde（スタジオ ヴェルデ）</dd></div>
+          <div class="info__row"><dt class="info__key">所在地</dt><dd>〒000-0000 ○○県○○市○○町1-2-3 ○○ビル 2F</dd></div>
+          <div class="info__row"><dt class="info__key">アクセス</dt><dd>○○線 ○○駅 東口より徒歩5分<br>提携駐車場 3台</dd></div>
+          <div class="info__row"><dt class="info__key">電話</dt><dd>000-0000-0000</dd></div>
+          <div class="info__row"><dt class="info__key">定休日</dt><dd>毎週水曜・第3日曜</dd></div>
+        </dl>
+
+        <table class="hours">
+          <thead>
+            <tr><th>&nbsp;</th><th>月</th><th>火</th><th>水</th><th>木</th><th>金</th><th>土</th><th>日</th></tr>
+          </thead>
+          <tbody>
+            <tr><th>午前</th><td>○</td><td>○</td><td>―</td><td>○</td><td>○</td><td>○</td><td>○</td></tr>
+            <tr><th>午後</th><td>○</td><td>○</td><td>―</td><td>○</td><td>○</td><td>○</td><td>―</td></tr>
+            <tr><th>夜間</th><td>○</td><td>○</td><td>―</td><td>○</td><td>○</td><td>―</td><td>―</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 7. お問い合わせ ===== -->
+<section class="section section--deep" id="contact">
+  <div class="wrap">
+    <div class="head reveal">
+      <span class="head__en">Contact</span>
+      <h2 class="head__jp">お問い合わせ・ご予約</h2>
+      <p class="head__lead">体験レッスン・見学のご予約、プランのご相談を承っています。</p>
+    </div>
+
+    <div class="contact__box reveal">
+      <p class="contact__tel">000-0000-0000</p>
+      <p class="contact__sub">受付時間 10:00 - 20:00（定休日 水曜・第3日曜）</p>
+      <div class="contact__btns">
+        <a class="btn btn--light" href="#contact">体験レッスンを予約する</a>
+        <a class="btn btn--light" href="#contact">メールで問い合わせる</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ===== フッター ===== -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__inner">
+      <a class="logo" href="#top">
+        <span class="logo__en">Studio Verde</span>
+        <span class="logo__jp">スタジオ ヴェルデ</span>
+      </a>
+      <nav class="footer__nav">
+        <a href="#news">お知らせ</a>
+        <a href="#instagram">スタジオの様子</a>
+        <a href="#about">スタジオ紹介</a>
+        <a href="#price">料金・はじめての方へ</a>
+        <a href="#access">アクセス</a>
+        <a href="#contact">お問い合わせ</a>
+      </nav>
+    </div>
+    <p class="footer__note">
+      このページは、ランディングページ制作の進め方をご覧いただくために作成したデモです。
+      スタジオ名・写真・文章・料金・住所・電話番号はすべて架空のもので、実在する施設とは関係ありません。
+      写真は実際のご制作時にお預かりした画像に差し替えます。
+    </p>
+    <p class="footer__copy">&copy; Studio Verde (demo)</p>
+  </div>
+</footer>
+
+<script>
+/* ===========================================================
+   このページで動いているJavaScriptは4つだけです。
+   1) スクロールでヘッダーの背景を出す
+   2) スマホのメニュー開閉
+   3) 今見ているセクションのメニューに線を引く
+   4) 要素をふわっと表示する / よくある質問の開閉
+   =========================================================== */
+
+// 1) ヘッダーの背景
+var header = document.getElementById('header');
+function onScroll(){
+  if (window.scrollY > 40) header.classList.add('is-solid');
+  else header.classList.remove('is-solid');
+}
+window.addEventListener('scroll', onScroll, { passive:true });
+onScroll();
+
+// 2) スマホのメニュー開閉
+var burger = document.getElementById('burger');
+var nav    = document.getElementById('nav');
+burger.addEventListener('click', function(){
+  var open = nav.classList.toggle('is-open');
+  burger.classList.toggle('is-open', open);
+  burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  burger.setAttribute('aria-label', open ? 'メニューを閉じる' : 'メニューを開く');
+  document.body.style.overflow = open ? 'hidden' : '';
+  if (open) header.classList.add('is-solid'); else onScroll();
+});
+// メニュー内のリンクを押したら閉じる
+nav.querySelectorAll('a').forEach(function(a){
+  a.addEventListener('click', function(){
+    if (!nav.classList.contains('is-open')) return;
+    nav.classList.remove('is-open');
+    burger.classList.remove('is-open');
+    burger.setAttribute('aria-expanded','false');
+    document.body.style.overflow = '';
+  });
+});
+
+// 3) 現在地のメニューに線を引く
+var links    = Array.prototype.slice.call(document.querySelectorAll('.nav__link'));
+var sections = links.map(function(a){ return document.querySelector(a.getAttribute('href')); });
+var spy = new IntersectionObserver(function(entries){
+  entries.forEach(function(e){
+    if (!e.isIntersecting) return;
+    var i = sections.indexOf(e.target);
+    links.forEach(function(a, n){ a.classList.toggle('is-active', n === i); });
+  });
+}, { rootMargin: '-45% 0px -50% 0px' });
+sections.forEach(function(s){ if (s) spy.observe(s); });
+
+// 4-a) ふわっと表示
+var reveal = new IntersectionObserver(function(entries, obs){
+  entries.forEach(function(e){
+    if (!e.isIntersecting) return;
+    e.target.classList.add('is-in');
+    obs.unobserve(e.target);
+  });
+}, { rootMargin: '0px 0px -8% 0px' });
+document.querySelectorAll('.reveal').forEach(function(el){ reveal.observe(el); });
+
+// 4-b) よくある質問の開閉
+document.querySelectorAll('.faq__q').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    btn.parentElement.classList.toggle('is-open');
+  });
+});
+</script>
+</body>
+</html>
