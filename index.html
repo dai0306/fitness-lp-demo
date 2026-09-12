@@ -107,6 +107,17 @@ ul, ol{ list-style:none; }
   background: linear-gradient(150deg, var(--mist) 0%, var(--sage) 100%);
 }
 .ph svg{ width:100%; height:100%; display:block; }
+
+/* ===== 写真を入れたときの見た目（tools/apply_images.py が <img> を差し込む）=====
+   写真が入った枠では、仮置きの図版と「お写真が入ります」の文字を自動で隠す。
+   図版はそのまま残っているので、写真を外せば元の見た目に戻る。 */
+[data-photo] > img{ display:block; width:100%; height:100%; object-fit:cover; }
+[data-photo]:has(> img) > svg,
+[data-photo]:has(> img) > .ph__note{ display:none; }
+.ph:has(> img){ background:none; }
+/* ファーストビューに写真を入れたときだけ、飾り用の薄さを解除して文字を読みやすくする */
+.hero--has-photo .hero__art{ opacity:1; }
+.hero--has-photo .hero__veil{ background: linear-gradient(100deg, rgba(255,255,255,.86) 0%, rgba(255,255,255,.62) 46%, rgba(255,255,255,.34) 100%); }
 .ph__note{
   position:absolute; left:50%; bottom:14px; transform:translateX(-50%);
   font-size:11px; letter-spacing:.18em; color: rgba(42,51,45,.55);
@@ -438,7 +449,7 @@ ul, ol{ list-style:none; }
 
 <!-- ===== 1. ファーストビュー ===== -->
 <section class="hero">
-  <div class="hero__art" aria-hidden="true">
+  <div class="hero__art" aria-hidden="true" data-photo="hero" data-photo-alt="スタジオでレッスンを受ける様子">
     <svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="hg1" x1="0" y1="0" x2="1" y2="1">
@@ -454,7 +465,7 @@ ul, ol{ list-style:none; }
         <path d="M-40 780 C 340 660, 700 880, 1480 680"/>
       </g>
     </svg>
-  </div>
+    </div>
   <div class="hero__veil" aria-hidden="true"></div>
 
   <div class="wrap hero__inner">
@@ -524,12 +535,13 @@ ul, ol{ list-style:none; }
     </div>
 
     <ul class="ig__grid reveal">
-      <li class="ig__cell ph"><svg viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#E9E1D2"/><circle cx="50" cy="38" r="16" fill="#CBBEA8"/><path d="M18 100 Q50 62 82 100Z" fill="#B9A98F"/></svg></li>
-      <li class="ig__cell ph"><svg viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#F2ECE1"/><path d="M0 70 Q25 46 50 66 T100 58V100H0Z" fill="#CBBEA8"/><circle cx="74" cy="26" r="12" fill="#DBD0BE"/></svg></li>
-      <li class="ig__cell ph"><svg viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#E4DACA"/><rect x="16" y="16" width="68" height="68" rx="34" fill="none" stroke="#B9A98F" stroke-width="6"/></svg></li>
-      <li class="ig__cell ph"><svg viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#F6F1E8"/><path d="M50 14C64 34 64 62 50 88 36 62 36 34 50 14Z" fill="#C7B9A3"/><path d="M50 14v74" stroke="#A8977C" stroke-width="1.5"/></svg></li>
-      <li class="ig__cell ph"><svg viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#EAE2D3"/><g fill="none" stroke="#BFB098" stroke-width="4"><path d="M10 74 Q34 40 58 66"/><path d="M42 88 Q66 50 94 74"/></g></svg></li>
-      <li class="ig__cell ph"><svg viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#F2EDE3"/><rect x="24" y="24" width="52" height="52" fill="#CFC2AD"/><rect x="38" y="38" width="24" height="24" fill="#F6F1E8"/></svg></li>
+      <li class="ig__cell ph" data-photo="ig1" data-photo-alt="レッスンの様子 1"><svg viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#E9E1D2"/><circle cx="50" cy="38" r="16" fill="#CBBEA8"/><path d="M18 100 Q50 62 82 100Z" fill="#B9A98F"/></svg>
+    </li>
+      <li class="ig__cell ph" data-photo="ig2" data-photo-alt="レッスンの様子 2"><svg viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#F2ECE1"/><path d="M0 70 Q25 46 50 66 T100 58V100H0Z" fill="#CBBEA8"/><circle cx="74" cy="26" r="12" fill="#DBD0BE"/></svg></li>
+      <li class="ig__cell ph" data-photo="ig3" data-photo-alt="レッスンの様子 3"><svg viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#E4DACA"/><rect x="16" y="16" width="68" height="68" rx="34" fill="none" stroke="#B9A98F" stroke-width="6"/></svg></li>
+      <li class="ig__cell ph" data-photo="ig4" data-photo-alt="レッスンの様子 4"><svg viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#F6F1E8"/><path d="M50 14C64 34 64 62 50 88 36 62 36 34 50 14Z" fill="#C7B9A3"/><path d="M50 14v74" stroke="#A8977C" stroke-width="1.5"/></svg></li>
+      <li class="ig__cell ph" data-photo="ig5" data-photo-alt="レッスンの様子 5"><svg viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#EAE2D3"/><g fill="none" stroke="#BFB098" stroke-width="4"><path d="M10 74 Q34 40 58 66"/><path d="M42 88 Q66 50 94 74"/></g></svg></li>
+      <li class="ig__cell ph" data-photo="ig6" data-photo-alt="レッスンの様子 6"><svg viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#F2EDE3"/><rect x="24" y="24" width="52" height="52" fill="#CFC2AD"/><rect x="38" y="38" width="24" height="24" fill="#F6F1E8"/></svg></li>
     </ul>
 
     <div class="ig__foot reveal">
@@ -548,7 +560,7 @@ ul, ol{ list-style:none; }
     </div>
 
     <div class="about__top">
-      <div class="ph about__ph reveal">
+      <div class="ph about__ph reveal" data-photo="about" data-photo-alt="スタジオの内観">
         <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
           <rect width="400" height="500" fill="#E9E1D2"/>
           <path d="M0 330 Q100 258 200 320 T400 292V500H0Z" fill="#CBBEA8"/>
@@ -556,7 +568,7 @@ ul, ol{ list-style:none; }
           <circle cx="300" cy="120" r="58" fill="#F4EFE5" opacity=".75"/>
         </svg>
         <span class="ph__note">お写真が入ります</span>
-      </div>
+    </div>
 
       <div class="reveal">
         <h3 class="about__title">「ここなら続けられる」を、<br>いちばん大切にしています。</h3>

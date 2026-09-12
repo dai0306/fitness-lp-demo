@@ -5,6 +5,7 @@
 
 - 実体は `index.html` **1ファイルだけ**（HTML・CSS・JavaScript を全部その中に書いている）
 - 画像ファイルは **0枚**。写真の代わりは全部 SVG（コードで描いた図形）
+- 写真が入る枠 8か所には `data-photo="..."` の目印を付けてある（写真を入れると仮置きの図形は自動で隠れる）
 - 掲載しているスタジオ名・写真・文章・料金・住所・電話番号は**すべて架空**
 - 店舗LPの一般的な構成（1ページ完結・メニュー6つ）で作成
 
@@ -28,8 +29,25 @@ python3 -m http.server 8899
 | `@media (max-width:640px)` | スマホ表示 |
 | `<body>` 以下 | 本文。`<!-- ===== 1. ファーストビュー ===== -->` のようにセクションごとにコメントを入れてある |
 | 一番下の `<script>` | 動いているのは4つだけ（ヘッダー背景 / メニュー開閉 / 現在地の下線 / ふわっと表示とFAQ開閉） |
+| `docs/self_edit_guide.md` | **修正依頼が来たときの手順書**。「言われた言葉 → 直す場所」の逆引き表から引く |
+| `tools/apply_images.py` | 写真の縮小・圧縮・差し込みをまとめてやる補助スクリプト（任意。手作業でもできる） |
+| `images/` | 写真の置き場所。中身は Git に入れない（お客様の写真を公開しないため） |
 
-自分で直すときの具体的な手順は `docs/self_edit_guide.md`。
+修正依頼が来たら、まず `docs/self_edit_guide.md` の逆引き表を見る。
+
+## 写真を入れる
+
+`images/` に写真を置き、`index.html` の `data-photo="枠の名前"` を検索して、その行の下に
+`<img src="images/写真.jpg" alt="説明">` を1行足すだけ。仮置きの図形は自動で隠れる。
+枚数が多いときは補助スクリプトが使える:
+
+```bash
+python3 tools/apply_images.py --list   # 枠の名前と現状を見る
+python3 tools/apply_images.py          # images/ の写真をまとめて反映
+python3 tools/apply_images.py --revert # 1つ前に戻す
+```
+
+詳しくは `docs/self_edit_guide.md`。
 
 ## 確認済み（2026-09-11・Chrome 実機表示）
 

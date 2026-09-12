@@ -1,0 +1,6 @@
+# お客様からお預かりした写真は、この公開リポジトリに入れない
+images/*
+!images/README.txt
+
+# スクリプトが作る一時ファイル
+index.html.bak
